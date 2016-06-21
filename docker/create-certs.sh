@@ -31,9 +31,9 @@ function node_certs() {
   openssl rsa -in "$NAME"-priv-key.pem -out "$NAME"-priv-key.pem
 }
 
-node_certs 'Web1'
+node_certs 'web1'
 
-node_certs 'Web2'
+node_certs 'web2'
 
 echo "Done"
 exit 0
