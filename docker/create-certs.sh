@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-#SSL_CONF="/usr/lib/ssl/openssl.cnf"
-SSL_CONF="/etc/pki/tls/openssl.cnf"
+
+SSL_CONF="/usr/lib/ssl/openssl.cnf"
+#SSL_CONF="/etc/pki/tls/openssl.cnf"
 
 read -p "Are you running as root /sudo su?  Y to continue, N to abort.  " CONTINUE
 CONTINUE_UP=${CONTINUE^^}
@@ -10,8 +11,10 @@ if [[ "$CONTINUE_UP" != "Y" ]]; then
   exit 1
 fi
 
-# Create Certificate Authority Keys
+echo "Creating the Certification Authority (CA) private key: ca-priv-key.pem"
 openssl genrsa -out ca-priv-key.pem 2048
+
+echo "Creating CA public key:ca.pem"
 openssl req -config $SSL_CONF -new -key ca-priv-key.pem -x509 -days 1825 -out ca.pem
 
 # To Inspect Keys
@@ -20,15 +23,18 @@ openssl req -config $SSL_CONF -new -key ca-priv-key.pem -x509 -days 1825 -out ca
 
 function node_certs() {
   NAME=$1
-  echo "Name:" $NAME
 
+  echo "Creating private key for : $NAME"
   openssl genrsa -out "$NAME"-priv-key.pem 2048
 
-  openssl req -subj "/CN=docker-net" -new -key "$NAME"-priv-key.pem -out "$NAME".csr
+  echo "Creating certificate signing request"
+  openssl req -subj "/CN=docker-net" -new -key "$NAME"-priv-key.pem -out "$NAME"-pub.csr
 
-  openssl x509 -req -days 1825 -in "$NAME".csr -CA ca.pem -CAkey ca-priv-key.pem -CAcreateserial -out "$NAME"-cert.pem -extensions v3_req -extfile $SSL_CONF
+  echo "Signing public key"
+  openssl x509 -req -days 1825 -in "$NAME".csr -CA ca.pem -CAkey ca-priv-key.pem -CAcreateserial -out "$NAME"-pub-cert-signed.pem -extensions v3_req -extfile $SSL_CONF
 
-  openssl rsa -in "$NAME"-priv-key.pem -out "$NAME"-priv-key.pem
+  echo "Signing private key"
+  openssl rsa -in "$NAME"-priv-key.pem -out "$NAME"-priv-key-signed.pem
 }
 
 node_certs 'web1'
