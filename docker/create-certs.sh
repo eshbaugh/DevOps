@@ -30,6 +30,7 @@ systemctl stop docker-engine
 
 docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
 
+export DOCKER_HOST=tcp://osboxes:2376 DOCKER_TLS_VERIFY=1
 
 #docker --tlsverify --tlscacert=ca.pem --tlscert=/home/admin/certs/cert.pem --tlskey=/home/admin/certs/key.pem -H=osboxes:2376 ps
 
