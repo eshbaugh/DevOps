@@ -1,45 +1,37 @@
 #!/usr/bin/env bash
 
+# This example works with docker version 1.12
+# based on example: https://docs.docker.com/engine/security/https/ 
 
-SSL_CONF="/usr/lib/ssl/openssl.cnf"
-#SSL_CONF="/etc/pki/tls/openssl.cnf"
+openssl genrsa -aes256 -out ca-key.pem 4096
+openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
+openssl genrsa -out server-key.pem 4096
+openssl req -subj "/CN=osboxes" -sha256 -new -key server-key.pem -out server.csr
 
-read -p "Are you running as root /sudo su?  Y to continue, N to abort.  " CONTINUE
-CONTINUE_UP=${CONTINUE^^}
-if [[ "$CONTINUE_UP" != "Y" ]]; then
-  echo "Exiting"
-  exit 1
-fi
+echo subjectAltName = IP:10.10.10.20,IP:127.0.0.1 > extfile.cnf # ADD YOUR IPS HERE!!!
 
-echo "Creating the Certification Authority (CA) private key: ca-priv-key.pem"
-openssl genrsa -out ca-priv-key.pem 2048
+openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
 
-echo "Creating CA public key:ca.pem"
-openssl req -config $SSL_CONF -new -key ca-priv-key.pem -x509 -days 1825 -out ca.pem
+openssl genrsa -out key.pem 4096
 
-# To Inspect Keys
-# openssl rsa -in ca-priv-key.pem -noout -text
-# openssl x509 -in ca.pem -noout -text
+openssl req -subj '/CN=client' -new -key key.pem -out client.csr
 
-function node_certs() {
-  NAME=$1
+echo extendedKeyUsage = clientAuth > extfile.cnf
 
-  echo "Creating private key for : $NAME"
-  openssl genrsa -out "$NAME"-priv-key.pem 2048
+openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem  -CAcreateserial -out cert.pem -extfile extfile.cnf
 
-  echo "Creating certificate signing request"
-  openssl req -subj "/CN=docker-net" -new -key "$NAME"-priv-key.pem -out "$NAME"-pub.csr
+chmod -v 0400 ca-key.pem key.pem server-key.pem 
 
-  echo "Signing public key"
-  openssl x509 -req -days 1825 -in "$NAME".csr -CA ca.pem -CAkey ca-priv-key.pem -CAcreateserial -out "$NAME"-pub-cert-signed.pem -extensions v3_req -extfile $SSL_CONF
+chmod -v 0444 ca.pem server-cert.pem cert.pem 
 
-  echo "Signing private key"
-  openssl rsa -in "$NAME"-priv-key.pem -out "$NAME"-priv-key-signed.pem
-}
+docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem
 
-node_certs 'web1'
+systemctl stop docker-engine
 
-node_certs 'web2'
+docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
+
+
+#docker --tlsverify --tlscacert=ca.pem --tlscert=/home/admin/certs/cert.pem --tlskey=/home/admin/certs/key.pem -H=osboxes:2376 ps
 
 echo "Done"
 exit 0
