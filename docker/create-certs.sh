@@ -24,19 +24,5 @@ chmod -v 0400 ca-key.pem key.pem server-key.pem
 
 chmod -v 0444 ca.pem server-cert.pem cert.pem 
 
-docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem
-
-systemctl stop docker-engine
-
-docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
-
-export DOCKER_HOST=tcp://osboxes:2376 DOCKER_TLS_VERIFY=1
-
-#docker --tlsverify --tlscacert=ca.pem --tlscert=/home/admin/certs/cert.pem --tlskey=/home/admin/certs/key.pem -H=osboxes:2376 ps
-#docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem --cluster-store=consul://127.0.0.1:8500 --cluster-advertise=lo:2376 -H=0.0.0.0:2376
-
-#docker daemon --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem --cluster-store=consul://127.0.0.1:8500 --cluster-advertise=enp0s3:2376 --cluster-store-opt kv.cacertfile=/home/admin/certs/ca.pem --cluster-store-opt kv.certfile=/home/admin/certs/server-cert.pem --cluster-store-opt kv.keyfile=/home/admin/certs/server-key.pem -H=0.0.0.0:2376
-
-
 echo "Done"
 exit 0
