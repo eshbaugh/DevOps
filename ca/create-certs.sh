@@ -3,6 +3,13 @@
 # This example works with docker version 1.12
 # based on example: https://docs.docker.com/engine/security/https/ 
 
+echo "This example is for test only!"
+
+CERT_DIR="/var/consul/certs/"
+mkdir -p $CERT_DIR
+
+cd $CERT_DIR
+
 openssl genrsa -aes256 -out ca-key.pem 4096
 openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
 openssl genrsa -out server-key.pem 4096
