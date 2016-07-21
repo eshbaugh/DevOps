@@ -3,9 +3,11 @@
 This repository contains files that are using to explore DevOps automation.
 
 ## Docker TLS encription
-Note: Both ca and consul are prerequisites for creating a TLS secure connection to docker and docker network encryption.
-Note2: This setup is intended for educational purposes only!  Aditional precautions, and perminate orchastration is required in production.
-Note 3: Docker 1.12.0-rc3 or newer is required and not installed by these scripts
+Both ca and consul are prerequisites for creating a TLS secure connection to docker and docker network encryption.
+
+This setup is intended for educational purposes only!  Aditional precautions, and perminate orchastration is required in production.
+
+Docker 1.12.0-rc3 or newer is required and not installed by these scripts
 
 #### ca
 Certificate Authority
