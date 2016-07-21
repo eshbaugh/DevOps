@@ -14,10 +14,10 @@ Consul key value data store
 Utilities to setup secure docker and docker networks using TLS encryption.
 
 ## Stack Setup
-Run the setup scripts in the top three directories in order to configure your VM for the next step.
+Run the setup scripts in the ca then consul directory
 
 ## Stack Startup 
-To start the ca/consul/docker/docker-network stack run the start scripts in different terminal shells so they can be killed independly.
+To start the consul/docker/docker-network stack run the start scripts in different terminal shells so they can be killed independently. 
   
 ### solr
-Unrelated to the other three this directory contains setup for the solr search engine and zookeeper
+This dirictory is nrelated to the other three this directory contains setup for the solr search engine and zookeeper
