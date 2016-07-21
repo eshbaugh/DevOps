@@ -7,7 +7,7 @@ Note: Both ca and consul are prerequisites for creating a TLS secure connection 
 Note2: This setup is intended for educational purposes only!  Aditional precautions, and perminate orchastration is required in production.
 Note 3: Docker 1.12.0-rc3 or newer is required and not installed by these scripts
 
-### ca
+#### ca
 Certificate Authority
   
 ### consul
