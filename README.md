@@ -10,17 +10,18 @@ Note 3: Docker 1.12.0-rc3 or newer is required and not installed by these script
 #### ca
 Certificate Authority
   
-### consul
+#### consul
 Consul key value data store
   
-### docker
+#### docker
 Utilities to setup secure docker and docker networks using TLS encryption.
 
-## Stack Setup
+### Stack Setup
 Run the setup scripts in the ca then consul directory
 
-## Stack Startup 
+### Stack Startup 
 To start the consul/docker/docker-network stack run the start scripts in different terminal shells so they can be killed independently. 
   
-### solr
+## Other Utilities  
+#### solr
 This dirictory is nrelated to the other three this directory contains setup for the solr search engine and zookeeper
