@@ -26,4 +26,4 @@ To start the consul/docker/docker-network stack run the start scripts in differe
   
 ## Other Utilities  
 #### solr
-This dirictory is nrelated to the other three this directory contains setup for the solr search engine and zookeeper
+This directory is nrelated to the other three this directory contains setup for the solr search engine and zookeeper
