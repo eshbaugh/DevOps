@@ -15,8 +15,8 @@ ansible_become=true
 
 openshift_deployment_type=openshift-enterprise 
 #oreg_url=master1.jme2.com/openshift3/ose 
-oreg_auth_user=righttap 
-oreg_auth_password=HyperDrive52 
+oreg_auth_user=RedHatUsername
+oreg_auth_password=RedHatPassword
 openshift_examples_modify_imagestreams=true 
 
 openshift_disable_check=memory_availability 
